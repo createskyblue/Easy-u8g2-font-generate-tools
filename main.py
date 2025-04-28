@@ -60,18 +60,18 @@ if (args.size != None):
 if (args.space != None):
     fontSPSize = eval(args.space)
     print('\033[1;30;33m',"[INFO] 读取命令行参数,字体间距 >\033[0m",fontSPSize)
-# if (args.bdf != None):
-#     bdfFlag = args.bdf
-#     print('\033[1;30;33m',"[INFO] 读取命令行参数,是否生成bdf文件 >\033[0m",bdfFlag)
-# if (args.c_file != None):
-#     cFileFlag = args.c_file
-#     print('\033[1;30;33m',"[INFO] 读取命令行参数,是否生成C文件 >\033[0m",cFileFlag)
-# if (args.ignore_ascii != None):
-#     del_ASCII_flag = args.ignore_ascii
-#     print('\033[1;30;33m',"[INFO] 读取命令行参数,是否过滤ASCII >\033[0m",del_ASCII_flag)
-# if (args.font_ascii != None):
-#     add_ASCII_flag = args.font_ascii
-#     print('\033[1;30;33m',"[INFO] 读取命令行参数,是否包含ASCII >\033[0m",add_ASCII_flag)    
+if (args.bdf != None):
+    bdfFlag = args.bdf
+    print('\033[1;30;33m',"[INFO] 读取命令行参数,是否生成bdf文件 >\033[0m",bdfFlag)
+if (args.c_file != None):
+    cFileFlag = args.c_file
+    print('\033[1;30;33m',"[INFO] 读取命令行参数,是否生成C文件 >\033[0m",cFileFlag)
+if (args.ignore_ascii != None):
+    del_ASCII_flag = args.ignore_ascii
+    print('\033[1;30;33m',"[INFO] 读取命令行参数,是否过滤ASCII >\033[0m",del_ASCII_flag)
+if (args.font_ascii != None):
+    add_ASCII_flag = args.font_ascii
+    print('\033[1;30;33m',"[INFO] 读取命令行参数,是否包含ASCII >\033[0m",add_ASCII_flag)    
 
 #如果命令行参数不完整，则提示用户手动输入
 if (args.input == None):
@@ -157,6 +157,7 @@ mapFile_f.close()
 
 #生成bdf字库
 if (bdfFlag):
+    #生成bdf文件
     exeExtension = ".exe" if os.name == "nt" else ""
     bdfPath = "bdf/{0}_{1}.bdf".format(tftFontNameReal,fontSizePx)
     targetFontName = "{0}_{1}".format(targetFontName,fontSizePx)
