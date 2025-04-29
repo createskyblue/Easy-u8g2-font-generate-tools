@@ -155,13 +155,13 @@ mapFile_f = open(mapPath,"w")
 mapFile_f.write(mapFileDatas)
 mapFile_f.close()
 
+exeExtension = ".exe" if os.name == "nt" else ""
+bdfPath = "bdf/{0}_{1}.bdf".format(tftFontNameReal,fontSizePx)
+targetFontName = "{0}_{1}".format(targetFontName,fontSizePx)
+c_codePath = "code/{0}.c".format(targetFontName)
 #生成bdf字库
 if (bdfFlag):
     #生成bdf文件
-    exeExtension = ".exe" if os.name == "nt" else ""
-    bdfPath = "bdf/{0}_{1}.bdf".format(tftFontNameReal,fontSizePx)
-    targetFontName = "{0}_{1}".format(targetFontName,fontSizePx)
-    c_codePath = "code/{0}.c".format(targetFontName)
     otf2bdfCMD = "otf2bdf"+exeExtension+" -v -r {3} -p {0} -o {1} {2}".format(fontSizePt,bdfPath,ttfFontPath,fontSizeDPI)
     print(">",otf2bdfCMD)
     os.system(otf2bdfCMD)
