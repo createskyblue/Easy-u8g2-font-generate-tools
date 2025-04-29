@@ -165,10 +165,11 @@ if (bdfFlag):
     otf2bdfCMD = "otf2bdf"+exeExtension+" -v -r {3} -p {0} -o {1} {2}".format(fontSizePt,bdfPath,ttfFontPath,fontSizeDPI)
     print(">",otf2bdfCMD)
     os.system(otf2bdfCMD)
-    if (cFileFlag):
-        #生成u8g2目标C语言字库文件
-        bdfconvCMD = "bdfconv"+exeExtension+" -v -b 0 -f 1 {0} -M {1} -n {2} -o {3} -p {4} -d {0}".format(bdfPath,mapPath,targetFontName,c_codePath,fontSPSize)
-        print(">",bdfconvCMD)
-        os.system(bdfconvCMD)
+
+if (cFileFlag):
+    #生成u8g2目标C语言字库文件
+    bdfconvCMD = "bdfconv"+exeExtension+" -v -b 0 -f 1 {0} -M {1} -n {2} -o {3} -p {4} -d {0}".format(bdfPath,mapPath,targetFontName,c_codePath,fontSPSize)
+    print(">",bdfconvCMD)
+    os.system(bdfconvCMD)
 #完成信息
 print('\033[1;37;42m',"[操作完成]",'\033[0m')
