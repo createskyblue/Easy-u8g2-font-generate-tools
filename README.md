@@ -87,21 +87,6 @@ python main.py
 
 ![运行截图](img/PixPin_2026-01-16_18-37-31.png)
 
-## 📂 项目结构
-
-```
-Python_u8g2_Fonts_Tools/
-├── main.py                 # 主程序
-├── config.json            # 配置文件示例
-├── bdfconv.exe            # BDF转换工具
-├── otf2bdf.exe            # OTF转BDF工具
-├── font/                  # 字体文件目录
-├── code/                  # 生成的字库代码目录
-├── bdf/                   # BDF字体文件目录
-├── map/                   # 字符映射文件目录
-└── img/                   # 图片资源目录
-```
-
 ## 🔧 工作流程
 
 1. **读取配置** - 从JSON配置文件加载所有参数
