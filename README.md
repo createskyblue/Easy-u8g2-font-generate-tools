@@ -58,9 +58,9 @@ python main.py
 ### 3. 查看输出
 
 程序会在以下目录生成文件：
-- `map/` - 字符映射文件 (.map)
-- `bdf/` - BDF字体文件 (.bdf)
-- `code/` - C语言字库代码 (.c)
+- `./example/map/` - 字符映射文件 (.map)
+- `./example/bdf/` - BDF字体文件 (.bdf)
+- `./example/code/` - C语言字库代码 (.c)
 
 ## 📝 配置参数说明
 
