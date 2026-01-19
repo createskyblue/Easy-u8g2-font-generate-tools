@@ -115,12 +115,26 @@ def loadConfig(configPath):
 
 def validateConfig(config):
     """验证配置文件"""
-    required_keys = ['font_name', 'font_path', 'font_dpi', 'font_size_px', 'font_spacing_percent', 'file_paths']
+    required_keys = ['font_name', 'font_path', 'font_dpi', 'font_size_px', 'font_spacing_percent']
+    if 'custom_chars' not in config and 'file_paths' not in config:
+        print('\033[1;31m[错误] 配置文件必须包含 "custom_chars" 或 "file_paths" 中的至少一个\033[0m')
+        exit(1)
+
     for key in required_keys:
         if key not in config:
             print(f'\033[1;31m[错误] 配置文件缺少必需参数: {key}\033[0m')
             exit(1)
-    
+
+    # 如果指定了file_paths，验证其为列表
+    if 'file_paths' in config and not isinstance(config['file_paths'], list):
+        print('\033[1;31m[错误] file_paths 必须是列表\033[0m')
+        exit(1)
+
+    # 如果指定了custom_chars，验证其为字符串
+    if 'custom_chars' in config and not isinstance(config['custom_chars'], str):
+        print('\033[1;31m[错误] custom_chars 必须是字符串\033[0m')
+        exit(1)
+
     # 验证字体文件是否存在
     if not os.path.isfile(config['font_path']):
         print(f'\033[1;31m[错误] 字体文件不存在: {config["font_path"]}\033[0m')
@@ -157,34 +171,42 @@ print(f"  字体大小: {config['font_size_px']}px")
 print(f"  字体间距: {config['font_spacing_percent']}%")
 print(f"  过滤ASCII: {config.get('filter_ascii', True)}")
 print(f"  MAP包含ASCII: {config.get('map_include_ascii', False)}")
+if 'custom_chars' in config:
+    print(f"  自定义字符: {config['custom_chars']}")
 
-# 获取文件列表
-fileList = getFileList(config['file_paths'])
+if 'custom_chars' in config:
+    # 使用自定义字符
+    inputText = config['custom_chars']
+    print(f'\033[1;32m使用自定义字符（共 {len(set(inputText))} 个唯一字符）:\033[0m')
+    print(f"  {set(inputText)}")
+else:
+    # 获取文件列表
+    fileList = getFileList(config['file_paths'])
 
-if not fileList:
-    print('\033[1;31m',"[错误] 未找到任何符合条件的文件！",'\033[0m')
-    exit(1)
+    if not fileList:
+        print('\033[1;31m',"[错误] 未找到任何符合条件的文件！",'\033[0m')
+        exit(1)
 
-print(f'\033[1;32m找到 {len(fileList)} 个文件：\033[0m')
-for f in fileList:
-    print(f"  - {f}")
+    print(f'\033[1;32m找到 {len(fileList)} 个文件：\033[0m')
+    for f in fileList:
+        print(f"  - {f}")
 
-# 处理所有文件，提取中文
-allChineseChars = []
-print('\033[1;33m正在处理文件...\033[0m')
-for filePath in fileList:
-    print(f"  处理: {os.path.basename(filePath)}")
-    chars = processFile(filePath)
-    allChineseChars.extend(chars)
+    # 处理所有文件，提取中文
+    allChineseChars = []
+    print('\033[1;33m正在处理文件...\033[0m')
+    for filePath in fileList:
+        print(f"  处理: {os.path.basename(filePath)}")
+        chars = processFile(filePath)
+        allChineseChars.extend(chars)
 
-if not allChineseChars:
-    print('\033[1;31m',"[警告] 未找到任何中文字符！",'\033[0m')
-    exit(1)
+    if not allChineseChars:
+        print('\033[1;31m',"[警告] 未找到任何中文字符！",'\033[0m')
+        exit(1)
 
-# 合并并去重
-inputText = ''.join(allChineseChars)
-print(f'\033[1;32m提取到的中文字符（共 {len(set(inputText))} 个唯一字符）:\033[0m')
-print(f"  {set(inputText)}")
+    # 合并并去重
+    inputText = ''.join(allChineseChars)
+    print(f'\033[1;32m提取到的中文字符（共 {len(set(inputText))} 个唯一字符）:\033[0m')
+    print(f"  {set(inputText)}")
 
 # 获取配置参数
 targetFontName = config['font_name']
