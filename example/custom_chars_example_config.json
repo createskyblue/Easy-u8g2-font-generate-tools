@@ -1,0 +1,11 @@
+{
+  "font_name": "customFont",
+  "font_path": "./example/font/MapleMono-NF-CN-Light.ttf",
+  "font_dpi": 72,
+  "font_size_px": 16,
+  "font_spacing_percent": 100,
+  "filter_ascii": true,
+  "map_include_ascii": false,
+  "output_dir": "./example",
+  "custom_chars": "12345"
+}
