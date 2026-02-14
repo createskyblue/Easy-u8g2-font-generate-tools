@@ -402,8 +402,16 @@ class U8g2FontGenerator(QMainWindow):
                 
                 # 打开输出目录
                 output_dir = config.get('output_dir', '')
-                if output_dir and os.path.exists(output_dir):
-                    os.startfile(output_dir)
+                if output_dir:
+                    # 处理相对路径，转换为绝对路径
+                    if output_dir.startswith('./') or output_dir.startswith('.\\'):
+                        output_dir = os.path.join(os.path.dirname(__file__), output_dir[2:])
+                    output_dir = os.path.abspath(output_dir)
+                    
+                    if os.path.exists(output_dir):
+                        os.startfile(output_dir)
+                    else:
+                        os.startfile(os.path.dirname(__file__))
                 else:
                     os.startfile(os.path.dirname(__file__))
             else:
