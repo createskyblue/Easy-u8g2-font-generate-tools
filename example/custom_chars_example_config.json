@@ -1,5 +1,5 @@
 {
-  "font_name": "myFont",
+  "font_name": "customFont",
   "font_path": "C:/Windows/Fonts/simsun.ttc",
   "font_dpi": 72,
   "font_size_px": 16,
@@ -7,7 +7,5 @@
   "filter_ascii": true,
   "map_include_ascii": true,
   "output_dir": "./example",
-  "file_paths": [
-    "./example/*.c"
-  ]
+  "custom_chars": "你好世界测试字体温度传感器0123456789℃"
 }

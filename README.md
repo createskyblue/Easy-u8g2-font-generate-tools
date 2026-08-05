@@ -51,12 +51,12 @@
 ```json
 {
   "font_name": "myFont",
-  "font_path": "./example/font/MapleMono-NF-CN-Light.ttf",
+  "font_path": "C:/Windows/Fonts/simsun.ttc",
   "font_dpi": 72,
   "font_size_px": 16,
   "font_spacing_percent": 100,
   "filter_ascii": true,
-  "map_include_ascii": false,
+  "map_include_ascii": true,
   "output_dir": "./example",
   "file_paths": [
     "./example/*.c"
@@ -136,6 +136,54 @@ main.py 适用于 GPL3.0 协议
 2. 字体文件路径可以是相对路径或绝对路径
 3. 支持的源代码编码：UTF-8、GBK、GB2312、UTF-16
 4. 如果遇到编码问题，程序会自动尝试其他编码格式
+
+## 🈶 中文字体「上下跳」（基线不齐）问题与解决
+
+### 现象
+用某些字体生成的中文字库，每个字的**上下位置不一致**，像"跳"一样：
+有的字底部探到基线下方、有的字整体偏高，一行文字看起来参差不齐。
+
+### 原理（为什么会这样）
+1. bdfconv 默认 `-b 0`（proportional 比例模式）：每个字形用**紧贴墨迹的包围盒**，
+   字形高度 = 它的笔画实际范围。
+2. 字形在行内的垂直位置由 BDF 源文件的 `BBX ... y` 偏移决定——它**忠实保留字体本身的
+   每个字形位置**，不做任何"对齐修正"。
+3. 所以**根本原因是字体源**：如果某个字体的 CJK 字形基线不规范
+   （比如 MapleMono 的"度"笔画探到基线下方 2px、"传""器"顶部差 2px），
+   生成的位图字库就会上下跳。这不是本工具或 bdfconv 的 bug，是字体源的问题。
+
+### 解决（换字体，不需要改参数）
+**换用基线规范的 CJK 字体即可**。推荐 **SimSun 宋体**（`C:/Windows/Fonts/simsun.ttc`）：
+它的所有 CJK 字形都统一坐基线上（底部对齐基线、顶部一致），即使 `-b 0` 模式也整齐。
+
+| 字体 | 类型 | 基线 | 说明 |
+|---|---|---|---|
+| **SimSun 宋体** ✅推荐 | 衬线 | 规范 | Windows 自带，字形优雅，CJK 统一坐基线 |
+| SimHei 黑体 | 无衬线 | 规范 | Windows 自带，字形饱满但略粗 |
+| Noto Sans SC / Noto Serif SC | 无衬线/衬线 | 规范 | OFL 开源许可，商用安全 |
+| MapleMono-NF-CN | 等宽 | **不齐** | CJK 字形基线不一，会上下跳，不推荐 |
+
+> 注：SimSun/SimHei 是微软系统字体（不可再分发），仓库里不打包它们，配置直接引用
+> `C:/Windows/Fonts/` 路径。要商用分发请用 Noto 系（开源）。
+
+### 进阶：用 `-b 1` 公共高度模式（可选）
+如果手动调用 bdfconv（不经本工具），建议 CJK 字体用 `-b 1`（common height 公共高度）：
+所有字形共享统一的 em 方框，行高一致、多行对齐更好，实心背景框也更整齐。
+
+```bash
+bdfconv.exe -b 1 -f 1 your.bdf -M your.map -n yourFont -o font.c -p 100
+```
+
+另外注意**排除异常字形**：某些罕见字（如 U+3031/3032 `〱〲` 竖排重复记号）的 BBox 高达
+30px，会把整行的行高/公共高度顶高。全量 CJK 生成建议用区间映射并排除它们：
+
+```
+32-128, $A0-$FF, $2000-$206F, $2100-$214F, $3000-$303F, ~$3031, ~$3032, $4E00-$9FFF, $FF00-$FFEF
+```
+
+### 已验证
+用 SimSun 宋体 + 上述设置生成的全量中文字库（U+4E00-9FFF 全部 2 万+ 汉字），
+渲染结果与 U8G2 原版 C 库**逐字节一致**，CJK 字形统一坐基线、无上下跳。
 
 ## 📞 联系方式
 
